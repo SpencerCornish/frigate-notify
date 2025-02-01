@@ -53,6 +53,7 @@ type Alerts struct {
 	Labels    Labels     `fig:"labels" json:"labels,omitempty" doc:"Allow/Block labels from alerting"`
 	SubLabels Labels     `fig:"sublabels" json:"sublabels,omitempty" doc:"Allow/Block sublabels from alerting"`
 	Discord   []Discord  `fig:"discord" json:"discord,omitempty" doc:"Discord notification settings"`
+	Slack     []Slack    `fig:"slack" json:"slack,omitempty" doc:"Slack notification settings"`
 	Gotify    []Gotify   `fig:"gotify" json:"gotify,omitempty" doc:"Gotify notification settings"`
 	SMTP      []SMTP     `fig:"smtp" json:"smtp,omitempty" doc:"SMTP notification settings"`
 	Telegram  []Telegram `fig:"telegram" json:"telegram,omitempty" doc:"Telegram notification settings"`
@@ -102,6 +103,13 @@ type AlertFilter struct {
 type Discord struct {
 	Enabled  bool        `fig:"enabled" json:"enabled" enum:"true,false" doc:"Enable notifications via Discord" default:false`
 	Webhook  string      `fig:"webhook" json:"webhook,omitempty" doc:"Discord webhook URL to send alerts" default:""`
+	Template string      `fig:"template" json:"template,omitempty" doc:"Custom message template" default:""`
+	Filters  AlertFilter `fig:"filters" json:"filters,omitempty" doc:"Filter notifications sent via this provider"`
+}
+
+type Slack struct {
+	Enabled  bool        `fig:"enabled" json:"enabled" enum:"true,false" doc:"Enable notifications via Slack" default:false`
+	Webhook  string      `fig:"webhook" json:"webhook,omitempty" doc:"Slack webhook URL to send alerts" default:""`
 	Template string      `fig:"template" json:"template,omitempty" doc:"Custom message template" default:""`
 	Filters  AlertFilter `fig:"filters" json:"filters,omitempty" doc:"Filter notifications sent via this provider"`
 }

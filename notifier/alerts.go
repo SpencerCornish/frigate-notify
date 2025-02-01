@@ -59,6 +59,16 @@ func SendAlert(event models.Event) {
 			}
 		}
 	}
+
+	for id, profile := range config.ConfigData.Alerts.Slack {
+		if profile.Enabled {
+			provider := notifMeta{name: "slack", index: id}
+			if checkAlertFilters(event, profile.Filters, provider) {
+				go SendSlackMessage(event, bytes.NewReader(snap), provider)
+			}
+		}
+	}
+
 	// Gotify
 	for id, profile := range config.ConfigData.Alerts.Gotify {
 		if profile.Enabled {

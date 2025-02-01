@@ -27,6 +27,7 @@ type FrigateConnection struct {
 type Notifiers struct {
 	Enabled  bool             `json:"enabled" example:"true" doc:"State of whether Frigate-Notify is enabled for notifications"`
 	Discord  []NotifierStatus `json:"discord" doc:"Status of Discord notifications"`
+	Slack    []NotifierStatus `json:"slack" doc:"Status of Slack notifications"`
 	Gotify   []NotifierStatus `json:"gotify" doc:"Status of Gotify notifications"`
 	Ntfy     []NotifierStatus `json:"ntfy" doc:"Status of Ntfy notifications"`
 	Pushover []NotifierStatus `json:"pushover" doc:"Status of Pushover notifications"`

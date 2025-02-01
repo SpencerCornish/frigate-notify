@@ -80,6 +80,17 @@ func (c *Config) Validate() []string {
 		}
 	}
 
+	// Validate Slack
+	Internal.Status.Notifications.Slack = make([]models.NotifierStatus, len(c.Alerts.Slack))
+	for id, profile := range c.Alerts.Slack {
+		Internal.Status.Notifications.Slack[id].InitNotifStatus(id, profile.Enabled)
+		if profile.Enabled {
+			if results := c.validateSlack(id); len(results) > 0 {
+				validationErrors = append(validationErrors, results...)
+			}
+		}
+	}
+
 	// Validate Gotify
 	Internal.Status.Notifications.Gotify = make([]models.NotifierStatus, len(c.Alerts.Gotify))
 	for id, profile := range c.Alerts.Gotify {
@@ -455,6 +466,20 @@ func (c *Config) validateDiscord(id int) []string {
 		discordErrors = append(discordErrors, msg+fmt.Sprintf(" Profile ID %v", id))
 	}
 	return discordErrors
+}
+
+func (c *Config) validateSlack(id int) []string {
+	var slackErrors []string
+	log.Debug().Msgf("Alerting enabled for Slack profile ID %d", id)
+	if c.Alerts.Slack[id].Webhook == "" {
+		slackErrors = append(slackErrors, fmt.Sprintf("No Slack webhook specified! Profile ID %v", id))
+	}
+	// Check template syntax
+	if msg := validateTemplate("Slack", c.Alerts.Slack[id].Template); msg != "" {
+		slackErrors = append(slackErrors, msg+fmt.Sprintf(" Profile ID %v", id))
+
+	}
+	return slackErrors
 }
 
 func (c *Config) validateGotify(id int) []string {
